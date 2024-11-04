@@ -116,12 +116,24 @@ body {
   font-style: italic;
 }
 
+.paths-table {
+  width: 100%;
+}
+
 .uploaders-table th,
 .paths-table th {
-  text-align: left;
+  width: 100%;
   font-weight: unset;
   color: #5c5c5c;
   white-space: nowrap;
+}
+
+.paths-table th:first-child {
+  text-align: left;
+}
+
+.paths-table th:not(:first-child) {
+  text-align: center;
 }
 
 .uploaders-table td,
@@ -138,6 +150,10 @@ body {
   display: inline-block;
 }
 
+.paths-table thead tr {
+  background: #f0f0f0;
+}
+
 .paths-table thead a {
   color: unset;
   text-decoration: none;
@@ -147,19 +163,41 @@ body {
   padding-left: 2px;
 }
 
+.paths-table tbody tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+.paths-table tbody tr:nth-child(even) {
+  background-color: #f0f0f0;
+}
+
 .paths-table tbody tr:hover {
-  background-color: #fafafa;
+  background-color: #dadada;
 }
 
 .paths-table .cell-actions {
   width: 90px;
-  display: flex;
   padding-left: 0.5em;
+}
+
+.paths-table td.cell-actions {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.paths-table td.cell-icon {
+  text-align: center;
+}
+
+.paths-table td.cell-icon svg {
+  padding: 0;
+  vertical-align: sub;
 }
 
 .paths-table .cell-mtime {
   width: 120px;
   padding-left: 0.5em;
+  padding-right: 0.5em;
   font-variant-numeric: tabular-nums;
 }
 
@@ -197,7 +235,6 @@ body {
 }
 
 .action-btn {
-  padding-right: 0.3em;
   cursor: pointer;
 }
 
@@ -303,5 +340,21 @@ body {
   .editor {
     background: black;
     color: white;
+  }
+
+  .paths-table thead tr {
+    background: #202020;
+  }
+
+  .paths-table tbody tr:nth-child(odd) {
+    background-color: #000;
+  }
+  
+  .paths-table tbody tr:nth-child(even) {
+    background-color: #202020;
+  }
+
+  .paths-table tbody tr:hover {
+    background-color: #404040;
   }
 }
