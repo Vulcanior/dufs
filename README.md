@@ -66,7 +66,7 @@ Options:
       --allow-delete         Allow delete files/folders
       --allow-search         Allow search files/folders
       --allow-symlink        Allow symlink to files/folders outside root directory
-      --allow-archive        Allow zip archive generation
+      --allow-archive        Allow download folders as archive file
       --enable-cors          Enable CORS, sets `Access-Control-Allow-Origin: *`
       --render-index         Serve index.html when requesting a directory, returns 404 if not found index.html
       --render-try-index     Serve index.html when requesting a directory, returns directory listing if not found index.html
@@ -244,23 +244,25 @@ dufs -a user:pass@/:rw,/dir1 -a @/
 - `-a user:pass@/:rw,/dir1`: `user` has read-write permissions for `/*`, has read-only permissions for `/dir1/*`.
 - `-a @/`: All paths is publicly accessible, everyone can view/download it.
 
-> There are no restrictions on using ':' and '@' characters in a password. For example, `user:pa:ss@1@/:rw` is valid, the password is `pa:ss@1`.
+**Auth permissions are restricted by dufs global permissions.** If dufs does not enable upload permissions via `--allow-upload`, then the account will not have upload permissions even if it is granted `read-write`(`:rw`) permissions.
 
 #### Hashed Password
 
 DUFS supports the use of sha-512 hashed password.
 
-Create hashed password
+Create hashed password:
 
-```
-$ mkpasswd -m sha-512 123456
+```sh
+$ openssl passwd -6 123456 # or `mkpasswd -m sha-512 123456`
 $6$tWMB51u6Kb2ui3wd$5gVHP92V9kZcMwQeKTjyTRgySsYJu471Jb1I6iHQ8iZ6s07GgCIO69KcPBRuwPE5tDq05xMAzye0NxVKuJdYs/
 ```
 
-Use hashed password
-```
+Use hashed password:
+
+```sh
 dufs -a 'admin:$6$tWMB51u6Kb2ui3wd$5gVHP92V9kZcMwQeKTjyTRgySsYJu471Jb1I6iHQ8iZ6s07GgCIO69KcPBRuwPE5tDq05xMAzye0NxVKuJdYs/@/:rw'
 ```
+> The hashed password contains `$6`, which can expand to a variable in some shells, so you have to use **single quotes** to wrap it.
 
 Two important things for hashed passwords:
 

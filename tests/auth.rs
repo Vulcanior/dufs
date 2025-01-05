@@ -116,6 +116,16 @@ fn auth_skip_on_options_method(
 }
 
 #[rstest]
+fn auth_skip_if_no_auth_user(server: TestServer) -> Result<(), Error> {
+    let url = format!("{}index.html", server.url());
+    let resp = fetch!(b"GET", &url)
+        .basic_auth("user", Some("pass"))
+        .send()?;
+    assert_eq!(resp.status(), 200);
+    Ok(())
+}
+
+#[rstest]
 fn auth_check(
     #[with(&["--auth", "user:pass@/:rw", "--auth", "user2:pass2@/", "-A"])] server: TestServer,
 ) -> Result<(), Error> {
@@ -326,14 +336,13 @@ fn auth_data(
 }
 
 #[rstest]
-fn auth_precedence(
-    #[with(&["--auth", "user:pass@/dir1:rw,/dir1/test.txt", "-A"])] server: TestServer,
+fn auth_shadow(
+    #[with(&["--auth", "user:pass@/:rw", "-a", "@/dir1", "-A"])] server: TestServer,
 ) -> Result<(), Error> {
     let url = format!("{}dir1/test.txt", server.url());
-    let resp = send_with_digest_auth(fetch!(b"PUT", &url).body(b"abc".to_vec()), "user", "pass")?;
-    assert_eq!(resp.status(), 403);
+    let resp = fetch!(b"PUT", &url).body(b"abc".to_vec()).send()?;
+    assert_eq!(resp.status(), 401);
 
-    let url = format!("{}dir1/file1", server.url());
     let resp = send_with_digest_auth(fetch!(b"PUT", &url).body(b"abc".to_vec()), "user", "pass")?;
     assert_eq!(resp.status(), 201);
 
